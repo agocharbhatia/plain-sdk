@@ -129,6 +129,10 @@ function isValueObjectType(type: GraphQLNamedType, _schema: GraphQLSchema): bool
   });
 }
 
+function deprecationDoc(reason: string): string {
+  return `/** @deprecated ${reason.replace(/\s+/g, " ").replace(/\*\//g, "*\\/")} */`;
+}
+
 /**
  * A root field deprecated in the schema stays callable in the SDK, so without this
  * the only warning a consumer gets is the day the server drops it.
@@ -144,7 +148,7 @@ function applyDeprecation(
   bodyStart: number,
 ): void {
   if (!field.deprecationReason) return;
-  const doc = `/** @deprecated ${field.deprecationReason.replace(/\s+/g, " ").replace(/\*\//g, "*\\/")} */`;
+  const doc = deprecationDoc(field.deprecationReason);
   signatures.splice(sigStart, 0, doc);
   for (let i = bodyStart; i < methodBodies.length; i++) {
     methodBodies[i] = `    ${doc}\n${methodBodies[i]}`;
@@ -278,10 +282,6 @@ export const plugin: PluginFunction = (schema: GraphQLSchema, documents: Types.D
     const hasRequiredArgs = field.args.some((a) => isNonNullType(a.type));
     const name = field.name;
 
-    if (field.deprecationReason != null) {
-      return { name, kind: "skip", hasRequiredArgs };
-    }
-
     if (hasRequiredArgs) {
       return { name, kind: "skip", hasRequiredArgs };
     }
@@ -295,11 +295,7 @@ export const plugin: PluginFunction = (schema: GraphQLSchema, documents: Types.D
 
     // Union/interface fields (single or list)
     if (isUnionType(namedType) || isInterfaceType(namedType)) {
-      const memberNames = getUnionMemberNames(namedType).filter((memberName) => {
-        const memberType = schema.getType(memberName);
-        if (!memberType || !isObjectType(memberType)) return true;
-        return Object.values(memberType.getFields()).some((f) => f.deprecationReason == null);
-      });
+      const memberNames = getUnionMemberNames(namedType);
       return {
         name,
         kind: "union",
@@ -369,7 +365,6 @@ export const plugin: PluginFunction = (schema: GraphQLSchema, documents: Types.D
       const memberType = schema.getType(memberName);
       if (!memberType || !isObjectType(memberType)) continue;
       for (const [fieldName, field] of Object.entries(memberType.getFields())) {
-        if (field.deprecationReason != null) continue;
         const sig = field.type.toString();
         const existing = fieldTypeSigs.get(fieldName);
         if (existing === undefined) {
@@ -459,6 +454,10 @@ export const plugin: PluginFunction = (schema: GraphQLSchema, documents: Types.D
     const unionFields = fieldInfos.filter((f) => f.kind === "union" && f.unionMemberTypeNames);
 
     const lines: string[] = [];
+    const pushDeprecation = (fieldName: string) => {
+      const reason = gqlType.getFields()[fieldName]?.deprecationReason;
+      if (reason != null) lines.push(`  ${deprecationDoc(reason)}`);
+    };
     lines.push(`export class ${modelClassName(typeName)} {`);
     lines.push(`  protected _client: PlainGraphQLClient;`);
     lines.push(`  protected _data: ${fragTsName};`);
@@ -467,6 +466,7 @@ export const plugin: PluginFunction = (schema: GraphQLSchema, documents: Types.D
 
     // Property declarations using indexed access types
     for (const f of scalarFields) {
+      pushDeprecation(f.name);
       lines.push(`  public readonly ${f.name}: ${fragTsName}["${f.name}"];`);
     }
 
@@ -474,6 +474,7 @@ export const plugin: PluginFunction = (schema: GraphQLSchema, documents: Types.D
     for (const f of unionFields) {
       if (!f.unionMemberTypeNames) continue;
       const unionType = generateUnionModelType(f.unionMemberTypeNames);
+      pushDeprecation(f.name);
       if (f.isList) {
         lines.push(`  public readonly ${f.name}: (${unionType})[];`);
       } else {
@@ -551,6 +552,7 @@ export const plugin: PluginFunction = (schema: GraphQLSchema, documents: Types.D
       allImportedTypes.add(varsTsName);
 
       lines.push(``);
+      pushDeprecation(f.name);
       lines.push(`  public get ${f.name}(): Promise<${relatedModelClass} | undefined> {`);
       lines.push(`    const id = this._data.${f.name}?.id;`);
       lines.push(`    if (!id) return Promise.resolve(undefined);`);
@@ -601,6 +603,7 @@ export const plugin: PluginFunction = (schema: GraphQLSchema, documents: Types.D
         const idArgName = parentQueryMapping.idArgName;
 
         lines.push(``);
+        pushDeprecation(f.name);
         lines.push(
           `  async ${f.name}(variables?: Omit<${varsTsName}, "${idArgName}">): Promise<PlainConnection<${nodeModelClass}>> {`,
         );
