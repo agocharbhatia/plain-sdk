@@ -271,25 +271,48 @@ function expandValueObject(type: GraphQLObjectType, indent: string): string {
 }
 
 /**
- * Find fields that have the same name but different type signatures across
- * union/interface members. These need GraphQL aliases to avoid validation
- * errors (the "SameResponseShape" rule rejects e.g. String! vs String).
+ * Fields with the same name but different type signatures across union/interface members.
+ * These need GraphQL aliases to avoid validation errors (the "SameResponseShape" rule
+ * rejects e.g. String! vs String).
+ *
+ * `all` holds every clashing name; `current` only the names that clash between fields that
+ * are not deprecated. A field in `current` is aliased on every member. A deprecated field
+ * that clashes is aliased on its own, so keeping deprecated fields never renames a field
+ * that is not deprecated.
  */
-function findConflictingUnionFields(members: readonly GraphQLObjectType[]): Set<string> {
-  const fieldTypeSigs = new Map<string, string>();
-  const conflicting = new Set<string>();
-  for (const member of members) {
-    for (const [fieldName, field] of Object.entries(member.getFields())) {
-      const sig = field.type.toString();
-      const existing = fieldTypeSigs.get(fieldName);
-      if (existing === undefined) {
-        fieldTypeSigs.set(fieldName, sig);
-      } else if (existing !== sig) {
-        conflicting.add(fieldName);
+interface UnionFieldConflicts {
+  all: Set<string>;
+  current: Set<string>;
+}
+
+function findConflictingUnionFields(members: readonly GraphQLObjectType[]): UnionFieldConflicts {
+  const clashes = (includeDeprecated: boolean): Set<string> => {
+    const fieldTypeSigs = new Map<string, string>();
+    const conflicting = new Set<string>();
+    for (const member of members) {
+      for (const [fieldName, field] of Object.entries(member.getFields())) {
+        if (!includeDeprecated && field.deprecationReason != null) continue;
+        const sig = field.type.toString();
+        const existing = fieldTypeSigs.get(fieldName);
+        if (existing === undefined) {
+          fieldTypeSigs.set(fieldName, sig);
+        } else if (existing !== sig) {
+          conflicting.add(fieldName);
+        }
       }
     }
-  }
-  return conflicting;
+    return conflicting;
+  };
+  return { all: clashes(true), current: clashes(false) };
+}
+
+function needsUnionAlias(
+  conflicts: UnionFieldConflicts | undefined,
+  fieldName: string,
+  field: GraphQLField<unknown, unknown>,
+): boolean {
+  if (!conflicts?.all.has(fieldName)) return false;
+  return field.deprecationReason != null || conflicts.current.has(fieldName);
 }
 
 /**
@@ -298,13 +321,13 @@ function findConflictingUnionFields(members: readonly GraphQLObjectType[]): Set<
  * relations ({ id } for queryable, full inline for non-queryable), and
  * nested union/interface fields.
  *
- * When `conflictingFields` is provided, fields in that set are aliased as
+ * When `conflictingFields` is provided, fields that `needsUnionAlias` picks are aliased as
  * `{TypeName}_{fieldName}: fieldName` to avoid GraphQL SameResponseShape errors.
  */
 function generateMemberInlineSelection(
   type: GraphQLObjectType,
   indent: string,
-  conflictingFields?: Set<string>,
+  conflictingFields?: UnionFieldConflicts,
 ): string {
   const fields = type.getFields();
   const lines: string[] = [];
@@ -315,7 +338,7 @@ function generateMemberInlineSelection(
     if (hasRequiredArgs) continue;
 
     // Alias conflicting fields to avoid GraphQL SameResponseShape validation errors
-    const needsAlias = conflictingFields?.has(fieldName) ?? false;
+    const needsAlias = needsUnionAlias(conflictingFields, fieldName, field);
     const alias = needsAlias
       ? `${type.name.charAt(0).toLowerCase()}${type.name.slice(1)}${fieldName.charAt(0).toUpperCase()}${fieldName.slice(1)}`
       : undefined;
@@ -533,7 +556,7 @@ function generateSelectionForType(
     lines.push(` {`);
     lines.push(`${indent}  __typename`);
     for (const member of members) {
-      if (conflicting.size > 0) {
+      if (conflicting.all.size > 0) {
         // Use inline fields with aliases to avoid SameResponseShape validation errors
         const memberFields = generateMemberInlineSelection(member, `${indent}    `, conflicting);
         if (memberFields) {
@@ -563,7 +586,7 @@ function generateSelectionForType(
     lines.push(` {`);
     lines.push(`${indent}  __typename`);
     for (const impl of implementations) {
-      if (conflicting.size > 0) {
+      if (conflicting.all.size > 0) {
         const memberFields = generateMemberInlineSelection(impl, `${indent}    `, conflicting);
         if (memberFields) {
           lines.push(`${indent}  ... on ${impl.name} {\n${memberFields}\n${indent}  }`);

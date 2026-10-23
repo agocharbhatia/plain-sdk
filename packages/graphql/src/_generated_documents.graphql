@@ -8441,7 +8441,7 @@ fragment ImportThreadMessageResultFields on ImportThreadMessageResult {
                 unixTimestamp
                 iso8601
               }
-              threadStatusDetailThreadLinkUpdatedLinearIssueId: linearIssueId
+              linearIssueId
             }
             ... on ThreadStatusDetailIgnored {
               statusChangedAt {
@@ -8575,7 +8575,7 @@ fragment ImportThreadMessageResultFields on ImportThreadMessageResult {
                 unixTimestamp
                 iso8601
               }
-              threadStatusDetailThreadLinkUpdatedLinearIssueId: linearIssueId
+              linearIssueId
             }
             ... on ThreadStatusDetailIgnored {
               statusChangedAt {
@@ -16693,7 +16693,7 @@ fragment ThreadFields on Thread {
         unixTimestamp
         iso8601
       }
-      threadStatusDetailThreadLinkUpdatedLinearIssueId: linearIssueId
+      linearIssueId
     }
     ... on ThreadStatusDetailIgnored {
       statusChangedAt {
@@ -20248,7 +20248,7 @@ fragment ThreadStatusTransitionedEntryFields on ThreadStatusTransitionedEntry {
         unixTimestamp
         iso8601
       }
-      threadStatusDetailThreadLinkUpdatedLinearIssueId: linearIssueId
+      linearIssueId
     }
     ... on ThreadStatusDetailIgnored {
       statusChangedAt {
@@ -20382,7 +20382,7 @@ fragment ThreadStatusTransitionedEntryFields on ThreadStatusTransitionedEntry {
         unixTimestamp
         iso8601
       }
-      threadStatusDetailThreadLinkUpdatedLinearIssueId: linearIssueId
+      linearIssueId
     }
     ... on ThreadStatusDetailIgnored {
       statusChangedAt {
@@ -22612,7 +22612,7 @@ fragment TimelineEntryFields on TimelineEntry {
             unixTimestamp
             iso8601
           }
-          threadStatusDetailThreadLinkUpdatedLinearIssueId: linearIssueId
+          linearIssueId
         }
         ... on ThreadStatusDetailIgnored {
           statusChangedAt {
@@ -22746,7 +22746,7 @@ fragment TimelineEntryFields on TimelineEntry {
             unixTimestamp
             iso8601
           }
-          threadStatusDetailThreadLinkUpdatedLinearIssueId: linearIssueId
+          linearIssueId
         }
         ... on ThreadStatusDetailIgnored {
           statusChangedAt {

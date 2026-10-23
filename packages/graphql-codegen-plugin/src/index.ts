@@ -356,25 +356,34 @@ export const plugin: PluginFunction = (schema: GraphQLSchema, documents: Types.D
 
   /**
    * Find fields that have the same name but different type signatures across
-   * union/interface members. Mirrors the same logic in generate-documents.ts.
+   * union/interface members. Mirrors findConflictingUnionFields and needsUnionAlias in
+   * generate-documents.ts: `all` holds every clashing name, `current` only the clashes
+   * between fields that are not deprecated.
    */
-  function findConflictingUnionFields(memberTypeNames: string[]): Set<string> {
-    const fieldTypeSigs = new Map<string, string>();
-    const conflicting = new Set<string>();
-    for (const memberName of memberTypeNames) {
-      const memberType = schema.getType(memberName);
-      if (!memberType || !isObjectType(memberType)) continue;
-      for (const [fieldName, field] of Object.entries(memberType.getFields())) {
-        const sig = field.type.toString();
-        const existing = fieldTypeSigs.get(fieldName);
-        if (existing === undefined) {
-          fieldTypeSigs.set(fieldName, sig);
-        } else if (existing !== sig) {
-          conflicting.add(fieldName);
+  function findConflictingUnionFields(memberTypeNames: string[]): {
+    all: Set<string>;
+    current: Set<string>;
+  } {
+    const clashes = (includeDeprecated: boolean): Set<string> => {
+      const fieldTypeSigs = new Map<string, string>();
+      const conflicting = new Set<string>();
+      for (const memberName of memberTypeNames) {
+        const memberType = schema.getType(memberName);
+        if (!memberType || !isObjectType(memberType)) continue;
+        for (const [fieldName, field] of Object.entries(memberType.getFields())) {
+          if (!includeDeprecated && field.deprecationReason != null) continue;
+          const sig = field.type.toString();
+          const existing = fieldTypeSigs.get(fieldName);
+          if (existing === undefined) {
+            fieldTypeSigs.set(fieldName, sig);
+          } else if (existing !== sig) {
+            conflicting.add(fieldName);
+          }
         }
       }
-    }
-    return conflicting;
+      return conflicting;
+    };
+    return { all: clashes(true), current: clashes(false) };
   }
 
   /**
@@ -385,19 +394,23 @@ export const plugin: PluginFunction = (schema: GraphQLSchema, documents: Types.D
     memberTypeNames: string[],
     dataExpr: string,
     clientExpr: string,
-    conflictingFields?: Set<string>,
+    conflictingFields?: { all: Set<string>; current: Set<string> },
   ): string {
     const cases: string[] = [];
     for (const memberName of memberTypeNames) {
       if (modelTypes.has(memberName)) {
         const memberModelClass = modelClassName(memberName);
         const remaps: string[] = [];
-        if (conflictingFields && conflictingFields.size > 0) {
+        if (conflictingFields && conflictingFields.all.size > 0) {
           const memberType = schema.getType(memberName);
           if (memberType && isObjectType(memberType)) {
             const memberFields = memberType.getFields();
-            for (const fieldName of conflictingFields) {
-              if (fieldName in memberFields) {
+            for (const fieldName of conflictingFields.all) {
+              const memberField = memberFields[fieldName];
+              if (
+                memberField &&
+                (memberField.deprecationReason != null || conflictingFields.current.has(fieldName))
+              ) {
                 const alias = `${memberName.charAt(0).toLowerCase()}${memberName.slice(1)}${fieldName.charAt(0).toUpperCase()}${fieldName.slice(1)}`;
                 remaps.push(`${fieldName}: (${dataExpr} as any).${alias}`);
               }

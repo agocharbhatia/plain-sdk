@@ -4,6 +4,8 @@
 
 Regenerate against the current API schema.
 
+The SDK now keeps fields the API deprecates, marked `@deprecated`, instead of dropping them, so this release adds them back to the result types and models (for example `Customer.company`). Unions also gain their deprecated member types, such as `ThreadStatusDetailLinearUpdated` on `Thread.statusDetail`. The API no longer returns those types, but an exhaustive `switch` on `__typename` sees the new members.
+
 **New values in returned enums**
 
 - Enum value 'CONNECTION_PENDING' was added to enum 'ThreadDiscussionAgentStatus'

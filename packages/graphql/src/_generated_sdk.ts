@@ -9429,7 +9429,7 @@ export class ThreadModel {
       case "ThreadStatusDetailReplied": return new ThreadStatusDetailRepliedModel(client, data.statusDetail as any);
       case "ThreadStatusDetailSnoozed": return new ThreadStatusDetailSnoozedModel(client, data.statusDetail as any);
       case "ThreadStatusDetailThreadDiscussionResolved": return new ThreadStatusDetailThreadDiscussionResolvedModel(client, data.statusDetail as any);
-      case "ThreadStatusDetailThreadLinkUpdated": return new ThreadStatusDetailThreadLinkUpdatedModel(client, { ...data.statusDetail as any, linearIssueId: (data.statusDetail as any).threadStatusDetailThreadLinkUpdatedLinearIssueId } as any);
+      case "ThreadStatusDetailThreadLinkUpdated": return new ThreadStatusDetailThreadLinkUpdatedModel(client, data.statusDetail as any);
       case "ThreadStatusDetailUnsnoozed": return new ThreadStatusDetailUnsnoozedModel(client, data.statusDetail as any);
       case "ThreadStatusDetailWaitingForCustomer": return new ThreadStatusDetailWaitingForCustomerModel(client, data.statusDetail as any);
       case "ThreadStatusDetailWaitingForDuration": return new ThreadStatusDetailWaitingForDurationModel(client, data.statusDetail as any);
@@ -10821,7 +10821,7 @@ export class ThreadStatusTransitionedEntryModel {
       case "ThreadStatusDetailReplied": return new ThreadStatusDetailRepliedModel(client, data.nextStatusDetail as any);
       case "ThreadStatusDetailSnoozed": return new ThreadStatusDetailSnoozedModel(client, data.nextStatusDetail as any);
       case "ThreadStatusDetailThreadDiscussionResolved": return new ThreadStatusDetailThreadDiscussionResolvedModel(client, data.nextStatusDetail as any);
-      case "ThreadStatusDetailThreadLinkUpdated": return new ThreadStatusDetailThreadLinkUpdatedModel(client, { ...data.nextStatusDetail as any, linearIssueId: (data.nextStatusDetail as any).threadStatusDetailThreadLinkUpdatedLinearIssueId } as any);
+      case "ThreadStatusDetailThreadLinkUpdated": return new ThreadStatusDetailThreadLinkUpdatedModel(client, data.nextStatusDetail as any);
       case "ThreadStatusDetailUnsnoozed": return new ThreadStatusDetailUnsnoozedModel(client, data.nextStatusDetail as any);
       case "ThreadStatusDetailWaitingForCustomer": return new ThreadStatusDetailWaitingForCustomerModel(client, data.nextStatusDetail as any);
       case "ThreadStatusDetailWaitingForDuration": return new ThreadStatusDetailWaitingForDurationModel(client, data.nextStatusDetail as any);
@@ -10841,7 +10841,7 @@ export class ThreadStatusTransitionedEntryModel {
       case "ThreadStatusDetailReplied": return new ThreadStatusDetailRepliedModel(client, data.previousStatusDetail as any);
       case "ThreadStatusDetailSnoozed": return new ThreadStatusDetailSnoozedModel(client, data.previousStatusDetail as any);
       case "ThreadStatusDetailThreadDiscussionResolved": return new ThreadStatusDetailThreadDiscussionResolvedModel(client, data.previousStatusDetail as any);
-      case "ThreadStatusDetailThreadLinkUpdated": return new ThreadStatusDetailThreadLinkUpdatedModel(client, { ...data.previousStatusDetail as any, linearIssueId: (data.previousStatusDetail as any).threadStatusDetailThreadLinkUpdatedLinearIssueId } as any);
+      case "ThreadStatusDetailThreadLinkUpdated": return new ThreadStatusDetailThreadLinkUpdatedModel(client, data.previousStatusDetail as any);
       case "ThreadStatusDetailUnsnoozed": return new ThreadStatusDetailUnsnoozedModel(client, data.previousStatusDetail as any);
       case "ThreadStatusDetailWaitingForCustomer": return new ThreadStatusDetailWaitingForCustomerModel(client, data.previousStatusDetail as any);
       case "ThreadStatusDetailWaitingForDuration": return new ThreadStatusDetailWaitingForDurationModel(client, data.previousStatusDetail as any);
