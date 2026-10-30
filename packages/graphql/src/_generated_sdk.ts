@@ -101,6 +101,7 @@ import {
   CreateLabelTypeDocument,
   CreateLinearAppIntegrationDocument,
   CreateMachineUserDocument,
+  CreateMcpFeedbackDocument,
   CreateMyFavoritePageDocument,
   CreateMyLinearIntegrationDocument,
   CreateMyMsTeamsIntegrationDocument,
@@ -121,6 +122,7 @@ import {
   CreateThreadDocument,
   CreateThreadEventDocument,
   CreateThreadFieldSchemaDocument,
+  CreateThreadFromMsTeamsMessageDocument,
   CreateThreadFromSlackMessageDocument,
   CreateThreadLinkDocument,
   CreateTierDocument,
@@ -253,6 +255,7 @@ import {
   GenerateAiToneRulesFromDescriptionDocument,
   GenerateHelpCenterArticleDocument,
   GeneratedRepliesDocument,
+  GeneratedReplyStateDocument,
   GetMsTeamsMembersForChannelDocument,
   GithubUserAuthIntegrationDocument,
   HeatmapMetricDocument,
@@ -306,7 +309,6 @@ import {
   MarkThreadAsDoneDocument,
   MarkThreadAsTodoDocument,
   MarkThreadDiscussionReadDocument,
-  MemberSeatCapCheckDocument,
   MintEmbedTokenDocument,
   MoveLabelTypeDocument,
   MoveWorkflowDocument,
@@ -361,7 +363,9 @@ import {
   ReorderThreadFieldSchemasDocument,
   ReplyToEmailDocument,
   ReplyToThreadDocument,
+  RequestDiscussionQuestionDocument,
   RequestDiscussionToolCallApprovalDocument,
+  RequestGeneratedReplyDocument,
   ResolveAgentApprovalDocument,
   ResolveCustomerForMsTeamsChannelDocument,
   ResolveCustomerForSlackChannelDocument,
@@ -440,6 +444,7 @@ import {
   TestChannelDocument,
   TestThreadsDocument,
   ThreadByExternalIdDocument,
+  ThreadByMsTeamsMessageDocument,
   ThreadByRefDocument,
   ThreadBySlackMessageDocument,
   ThreadBySlackPermalinkDocument,
@@ -507,6 +512,7 @@ import {
   UpdateMyUserDocument,
   UpdateNoteDocument,
   UpdateOAuthAppDocument,
+  UpdateRolePriorityOrderDocument,
   UpdateSavedThreadsViewDocument,
   UpdateServiceLevelAgreementDocument,
   UpdateServiceLevelAgreementPolicyDocument,
@@ -575,6 +581,7 @@ import {
   WebhookTargetsDocument,
   WebhookVersionsDocument,
   WorkOsConfigurationDocument,
+  WorkflowBuilderGuideDocument,
   WorkflowCapabilitiesDocument,
   WorkflowDocument,
   WorkflowExecutionDocument,
@@ -874,6 +881,8 @@ import type {
   CreateLinearAppIntegrationMutationVariables,
   CreateMachineUserMutation,
   CreateMachineUserMutationVariables,
+  CreateMcpFeedbackMutation,
+  CreateMcpFeedbackMutationVariables,
   CreateMyFavoritePageMutation,
   CreateMyFavoritePageMutationVariables,
   CreateMyLinearIntegrationMutation,
@@ -912,6 +921,8 @@ import type {
   CreateThreadEventMutationVariables,
   CreateThreadFieldSchemaMutation,
   CreateThreadFieldSchemaMutationVariables,
+  CreateThreadFromMsTeamsMessageMutation,
+  CreateThreadFromMsTeamsMessageMutationVariables,
   CreateThreadFromSlackMessageMutation,
   CreateThreadFromSlackMessageMutationVariables,
   CreateThreadLinkMutation,
@@ -1219,6 +1230,8 @@ import type {
   GeneratedRepliesQuery,
   GeneratedRepliesQueryVariables,
   GeneratedReplyFieldsFragment,
+  GeneratedReplyStateQuery,
+  GeneratedReplyStateQueryVariables,
   GenericThreadLinkFieldsFragment,
   GetMsTeamsMembersForChannelQuery,
   GetMsTeamsMembersForChannelQueryVariables,
@@ -1324,6 +1337,7 @@ import type {
   JiraSiteIntegrationFieldsFragment,
   KnowledgeGapFeedbackDetailsFieldsFragment,
   KnowledgeGapFieldsFragment,
+  KnowledgeGapNotificationDetailFieldsFragment,
   KnowledgeGapQuery,
   KnowledgeGapQueryVariables,
   KnowledgeGapsQuery,
@@ -1366,8 +1380,7 @@ import type {
   MarkThreadAsTodoMutationVariables,
   MarkThreadDiscussionReadMutation,
   MarkThreadDiscussionReadMutationVariables,
-  MemberSeatCapCheckQuery,
-  MemberSeatCapCheckQueryVariables,
+  McpFeedbackDetailsFieldsFragment,
   MergedThreadMessageEntryFieldsFragment,
   MeteredFeatureEntitlementFieldsFragment,
   MintEmbedTokenMutation,
@@ -1478,8 +1491,12 @@ import type {
   ReplyToEmailMutationVariables,
   ReplyToThreadMutation,
   ReplyToThreadMutationVariables,
+  RequestDiscussionQuestionMutation,
+  RequestDiscussionQuestionMutationVariables,
   RequestDiscussionToolCallApprovalMutation,
   RequestDiscussionToolCallApprovalMutationVariables,
+  RequestGeneratedReplyMutation,
+  RequestGeneratedReplyMutationVariables,
   ResolveAgentApprovalMutation,
   ResolveAgentApprovalMutationVariables,
   ResolveCustomerForMsTeamsChannelMutation,
@@ -1668,6 +1685,8 @@ import type {
   ThreadAssignmentNotificationDetailFieldsFragment,
   ThreadByExternalIdQuery,
   ThreadByExternalIdQueryVariables,
+  ThreadByMsTeamsMessageQuery,
+  ThreadByMsTeamsMessageQueryVariables,
   ThreadByRefQuery,
   ThreadByRefQueryVariables,
   ThreadBySlackMessageQuery,
@@ -1854,6 +1873,8 @@ import type {
   UpdateNoteMutationVariables,
   UpdateOAuthAppMutation,
   UpdateOAuthAppMutationVariables,
+  UpdateRolePriorityOrderMutation,
+  UpdateRolePriorityOrderMutationVariables,
   UpdateSavedThreadsViewMutation,
   UpdateSavedThreadsViewMutationVariables,
   UpdateServiceLevelAgreementMutation,
@@ -2004,6 +2025,7 @@ import type {
   WebhookVersionsQuery,
   WebhookVersionsQueryVariables,
   WorkOsConfigurationQuery,
+  WorkflowBuilderGuideQuery,
   WorkflowCapabilitiesQuery,
   WorkflowCapabilitiesQueryVariables,
   WorkflowExecutionFieldsFragment,
@@ -2478,7 +2500,7 @@ export class AiFeedbackModel {
   public readonly id: AiFeedbackFieldsFragment["id"];
   public readonly updatedAt: AiFeedbackFieldsFragment["updatedAt"];
   public readonly createdBy: MachineUserActorModel | SystemActorModel | UserActorModel;
-  public readonly details: AiAgentFeedbackDetailsModel | KnowledgeGapFeedbackDetailsModel | ThreadCatchupFeedbackDetailsModel | ThreadClustersFeedbackDetailsModel | ToneRuleFeedbackDetailsModel;
+  public readonly details: AiAgentFeedbackDetailsModel | KnowledgeGapFeedbackDetailsModel | McpFeedbackDetailsModel | ThreadCatchupFeedbackDetailsModel | ThreadClustersFeedbackDetailsModel | ToneRuleFeedbackDetailsModel;
   public readonly updatedBy: MachineUserActorModel | SystemActorModel | UserActorModel;
 
   constructor(client: PlainGraphQLClient, data: AiFeedbackFieldsFragment) {
@@ -2500,6 +2522,7 @@ export class AiFeedbackModel {
     switch ((data.details as any).__typename) {
       case "AiAgentFeedbackDetails": return new AiAgentFeedbackDetailsModel(client, data.details as any);
       case "KnowledgeGapFeedbackDetails": return new KnowledgeGapFeedbackDetailsModel(client, data.details as any);
+      case "McpFeedbackDetails": return new McpFeedbackDetailsModel(client, data.details as any);
       case "ThreadCatchupFeedbackDetails": return new ThreadCatchupFeedbackDetailsModel(client, data.details as any);
       case "ThreadClustersFeedbackDetails": return new ThreadClustersFeedbackDetailsModel(client, data.details as any);
       case "ToneRuleFeedbackDetails": return new ToneRuleFeedbackDetailsModel(client, data.details as any);
@@ -3423,6 +3446,7 @@ export class BusinessHoursScheduleModel {
   public readonly createdAt: BusinessHoursScheduleFieldsFragment["createdAt"];
   public readonly id: BusinessHoursScheduleFieldsFragment["id"];
   public readonly name: BusinessHoursScheduleFieldsFragment["name"];
+  public readonly slots: BusinessHoursScheduleFieldsFragment["slots"];
   public readonly timezone: BusinessHoursScheduleFieldsFragment["timezone"];
   public readonly updatedAt: BusinessHoursScheduleFieldsFragment["updatedAt"];
   public readonly createdBy: MachineUserActorModel | SystemActorModel | UserActorModel;
@@ -3434,6 +3458,7 @@ export class BusinessHoursScheduleModel {
     this.createdAt = data.createdAt;
     this.id = data.id;
     this.name = data.name;
+    this.slots = data.slots;
     this.timezone = data.timezone;
     this.updatedAt = data.updatedAt;
     this.createdBy = (() => {
@@ -5020,6 +5045,8 @@ export class CustomRoleModel {
   public readonly id: CustomRoleFieldsFragment["id"];
   public readonly name: CustomRoleFieldsFragment["name"];
   public readonly permissionsPreset: CustomRoleFieldsFragment["permissionsPreset"];
+  public readonly priority: CustomRoleFieldsFragment["priority"];
+  public readonly scopeDefinitions: CustomRoleFieldsFragment["scopeDefinitions"];
   public readonly updatedAt: CustomRoleFieldsFragment["updatedAt"];
   public readonly createdBy: MachineUserActorModel | SystemActorModel | UserActorModel;
   public readonly updatedBy: MachineUserActorModel | SystemActorModel | UserActorModel;
@@ -5032,6 +5059,8 @@ export class CustomRoleModel {
     this.id = data.id;
     this.name = data.name;
     this.permissionsPreset = data.permissionsPreset;
+    this.priority = data.priority;
+    this.scopeDefinitions = data.scopeDefinitions;
     this.updatedAt = data.updatedAt;
     this.createdBy = (() => {
     switch ((data.createdBy as any).__typename) {
@@ -5861,12 +5890,24 @@ export class HelpCenterModel {
   public readonly createdAt: HelpCenterFieldsFragment["createdAt"];
   public readonly deletedAt: HelpCenterFieldsFragment["deletedAt"];
   public readonly description: HelpCenterFieldsFragment["description"];
+  public readonly featuredHomepageItems: HelpCenterFieldsFragment["featuredHomepageItems"];
   public readonly headCustomJs: HelpCenterFieldsFragment["headCustomJs"];
+  public readonly heroAlignment: HelpCenterFieldsFragment["heroAlignment"];
+  public readonly heroHeading: HelpCenterFieldsFragment["heroHeading"];
+  public readonly heroSearchPlaceholder: HelpCenterFieldsFragment["heroSearchPlaceholder"];
+  public readonly heroSubheading: HelpCenterFieldsFragment["heroSubheading"];
   public readonly id: HelpCenterFieldsFragment["id"];
   public readonly internalName: HelpCenterFieldsFragment["internalName"];
   public readonly isChatEnabled: HelpCenterFieldsFragment["isChatEnabled"];
   public readonly isCustomerFacingAiEnabled: HelpCenterFieldsFragment["isCustomerFacingAiEnabled"];
   public readonly isDeleted: HelpCenterFieldsFragment["isDeleted"];
+  public readonly isHomepageRedesignEnabled: HelpCenterFieldsFragment["isHomepageRedesignEnabled"];
+  public readonly isLinkCardsEnabled: HelpCenterFieldsFragment["isLinkCardsEnabled"];
+  public readonly isPopularTopicsEnabled: HelpCenterFieldsFragment["isPopularTopicsEnabled"];
+  public readonly linkCards: HelpCenterFieldsFragment["linkCards"];
+  public readonly linkCardsHeading: HelpCenterFieldsFragment["linkCardsHeading"];
+  public readonly popularTopicArticleIds: HelpCenterFieldsFragment["popularTopicArticleIds"];
+  public readonly popularTopicColumns: HelpCenterFieldsFragment["popularTopicColumns"];
   public readonly publicName: HelpCenterFieldsFragment["publicName"];
   public readonly publishedAt: HelpCenterFieldsFragment["publishedAt"];
   public readonly type: HelpCenterFieldsFragment["type"];
@@ -5886,12 +5927,24 @@ export class HelpCenterModel {
     this.createdAt = data.createdAt;
     this.deletedAt = data.deletedAt;
     this.description = data.description;
+    this.featuredHomepageItems = data.featuredHomepageItems;
     this.headCustomJs = data.headCustomJs;
+    this.heroAlignment = data.heroAlignment;
+    this.heroHeading = data.heroHeading;
+    this.heroSearchPlaceholder = data.heroSearchPlaceholder;
+    this.heroSubheading = data.heroSubheading;
     this.id = data.id;
     this.internalName = data.internalName;
     this.isChatEnabled = data.isChatEnabled;
     this.isCustomerFacingAiEnabled = data.isCustomerFacingAiEnabled;
     this.isDeleted = data.isDeleted;
+    this.isHomepageRedesignEnabled = data.isHomepageRedesignEnabled;
+    this.isLinkCardsEnabled = data.isLinkCardsEnabled;
+    this.isPopularTopicsEnabled = data.isPopularTopicsEnabled;
+    this.linkCards = data.linkCards;
+    this.linkCardsHeading = data.linkCardsHeading;
+    this.popularTopicArticleIds = data.popularTopicArticleIds;
+    this.popularTopicColumns = data.popularTopicColumns;
     this.publicName = data.publicName;
     this.publishedAt = data.publishedAt;
     this.type = data.type;
@@ -6049,6 +6102,8 @@ export class HelpCenterArticleModel {
   public readonly description: HelpCenterArticleFieldsFragment["description"];
   public readonly icon: HelpCenterArticleFieldsFragment["icon"];
   public readonly id: HelpCenterArticleFieldsFragment["id"];
+  public readonly isFeatured: HelpCenterArticleFieldsFragment["isFeatured"];
+  public readonly isPopularTopic: HelpCenterArticleFieldsFragment["isPopularTopic"];
   public readonly slug: HelpCenterArticleFieldsFragment["slug"];
   public readonly status: HelpCenterArticleFieldsFragment["status"];
   public readonly statusChangedAt: HelpCenterArticleFieldsFragment["statusChangedAt"];
@@ -6066,6 +6121,8 @@ export class HelpCenterArticleModel {
     this.description = data.description;
     this.icon = data.icon;
     this.id = data.id;
+    this.isFeatured = data.isFeatured;
+    this.isPopularTopic = data.isPopularTopic;
     this.slug = data.slug;
     this.status = data.status;
     this.statusChangedAt = data.statusChangedAt;
@@ -6145,6 +6202,8 @@ export class HelpCenterArticleGroupModel {
   public readonly __typename = "HelpCenterArticleGroup" as const;
 
   public readonly createdAt: HelpCenterArticleGroupFieldsFragment["createdAt"];
+  public readonly description: HelpCenterArticleGroupFieldsFragment["description"];
+  public readonly icon: HelpCenterArticleGroupFieldsFragment["icon"];
   public readonly id: HelpCenterArticleGroupFieldsFragment["id"];
   public readonly name: HelpCenterArticleGroupFieldsFragment["name"];
   public readonly slug: HelpCenterArticleGroupFieldsFragment["slug"];
@@ -6156,6 +6215,8 @@ export class HelpCenterArticleGroupModel {
     this._client = client;
     this._data = data;
     this.createdAt = data.createdAt;
+    this.description = data.description;
+    this.icon = data.icon;
     this.id = data.id;
     this.name = data.name;
     this.slug = data.slug;
@@ -6344,6 +6405,7 @@ export class ImportBroadcastAudienceChannelsResultModel {
   public readonly invalidCount: ImportBroadcastAudienceChannelsResultFieldsFragment["invalidCount"];
   public readonly isDryRun: ImportBroadcastAudienceChannelsResultFieldsFragment["isDryRun"];
   public readonly notFoundCount: ImportBroadcastAudienceChannelsResultFieldsFragment["notFoundCount"];
+  public readonly rows: ImportBroadcastAudienceChannelsResultFieldsFragment["rows"];
 
   constructor(client: PlainGraphQLClient, data: ImportBroadcastAudienceChannelsResultFieldsFragment) {
     this._client = client;
@@ -6354,6 +6416,7 @@ export class ImportBroadcastAudienceChannelsResultModel {
     this.invalidCount = data.invalidCount;
     this.isDryRun = data.isDryRun;
     this.notFoundCount = data.notFoundCount;
+    this.rows = data.rows;
   }
 
   public get broadcastAudience(): Promise<BroadcastAudienceModel | undefined> {
@@ -6397,6 +6460,7 @@ export class ImportJobModel {
 
   public readonly completedAt: ImportJobFieldsFragment["completedAt"];
   public readonly id: ImportJobFieldsFragment["id"];
+  public readonly importRuns: ImportJobFieldsFragment["importRuns"];
   public readonly startedAt: ImportJobFieldsFragment["startedAt"];
   public readonly status: ImportJobFieldsFragment["status"];
 
@@ -6405,6 +6469,7 @@ export class ImportJobModel {
     this._data = data;
     this.completedAt = data.completedAt;
     this.id = data.id;
+    this.importRuns = data.importRuns;
     this.startedAt = data.startedAt;
     this.status = data.status;
   }
@@ -6693,7 +6758,7 @@ export class InternalNotificationModel {
   public readonly userId: InternalNotificationFieldsFragment["userId"];
   public readonly archivedBy: (MachineUserActorModel | SystemActorModel | UserActorModel) | null;
   public readonly createdBy: MachineUserActorModel | SystemActorModel | UserActorModel;
-  public readonly details: (DiscussionResolvedNotificationDetailModel | EmailBounceNotificationDetailModel | IntegrationReauthRequiredNotificationDetailModel | NoteMentionNotificationDetailModel | ThreadAssignmentNotificationDetailModel | ThreadNotificationDetailModel | WebhookTargetNotificationDetailModel) | null;
+  public readonly details: (DiscussionResolvedNotificationDetailModel | EmailBounceNotificationDetailModel | IntegrationReauthRequiredNotificationDetailModel | KnowledgeGapNotificationDetailModel | NoteMentionNotificationDetailModel | ThreadAssignmentNotificationDetailModel | ThreadNotificationDetailModel | WebhookTargetNotificationDetailModel) | null;
   public readonly updatedBy: MachineUserActorModel | SystemActorModel | UserActorModel;
 
   constructor(client: PlainGraphQLClient, data: InternalNotificationFieldsFragment) {
@@ -6729,6 +6794,7 @@ export class InternalNotificationModel {
       case "DiscussionResolvedNotificationDetail": return new DiscussionResolvedNotificationDetailModel(client, data.details as any);
       case "EmailBounceNotificationDetail": return new EmailBounceNotificationDetailModel(client, data.details as any);
       case "IntegrationReauthRequiredNotificationDetail": return new IntegrationReauthRequiredNotificationDetailModel(client, data.details as any);
+      case "KnowledgeGapNotificationDetail": return new KnowledgeGapNotificationDetailModel(client, data.details as any);
       case "NoteMentionNotificationDetail": return new NoteMentionNotificationDetailModel(client, data.details as any);
       case "ThreadAssignmentNotificationDetail": return new ThreadAssignmentNotificationDetailModel(client, data.details as any);
       case "ThreadNotificationDetail": return new ThreadNotificationDetailModel(client, data.details as any);
@@ -6937,6 +7003,20 @@ export class KnowledgeGapFeedbackDetailsModel {
     this.knowledgeGapId = data.knowledgeGapId;
     this.reason = data.reason;
     this.sentiment = data.sentiment;
+  }
+}
+
+export class KnowledgeGapNotificationDetailModel {
+  protected _client: PlainGraphQLClient;
+  protected _data: KnowledgeGapNotificationDetailFieldsFragment;
+  public readonly __typename = "KnowledgeGapNotificationDetail" as const;
+
+  public readonly knowledgeGapId: KnowledgeGapNotificationDetailFieldsFragment["knowledgeGapId"];
+
+  constructor(client: PlainGraphQLClient, data: KnowledgeGapNotificationDetailFieldsFragment) {
+    this._client = client;
+    this._data = data;
+    this.knowledgeGapId = data.knowledgeGapId;
   }
 }
 
@@ -7374,6 +7454,26 @@ export class MachineUserActorModel {
   }
 }
 
+export class McpFeedbackDetailsModel {
+  protected _client: PlainGraphQLClient;
+  protected _data: McpFeedbackDetailsFieldsFragment;
+  public readonly __typename = "McpFeedbackDetails" as const;
+
+  public readonly comment: McpFeedbackDetailsFieldsFragment["comment"];
+  public readonly reason: McpFeedbackDetailsFieldsFragment["reason"];
+  public readonly sentiment: McpFeedbackDetailsFieldsFragment["sentiment"];
+  public readonly toolName: McpFeedbackDetailsFieldsFragment["toolName"];
+
+  constructor(client: PlainGraphQLClient, data: McpFeedbackDetailsFieldsFragment) {
+    this._client = client;
+    this._data = data;
+    this.comment = data.comment;
+    this.reason = data.reason;
+    this.sentiment = data.sentiment;
+    this.toolName = data.toolName;
+  }
+}
+
 export class MergedThreadMessageEntryModel {
   protected _client: PlainGraphQLClient;
   protected _data: MergedThreadMessageEntryFieldsFragment;
@@ -7752,6 +7852,7 @@ export class OAuthAppModel {
   protected _data: OAuthAppFieldsFragment;
   public readonly __typename = "OAuthApp" as const;
 
+  public readonly allowedOrigins: OAuthAppFieldsFragment["allowedOrigins"];
   public readonly clientId: OAuthAppFieldsFragment["clientId"];
   public readonly createdAt: OAuthAppFieldsFragment["createdAt"];
   public readonly description: OAuthAppFieldsFragment["description"];
@@ -7760,12 +7861,14 @@ export class OAuthAppModel {
   public readonly name: OAuthAppFieldsFragment["name"];
   public readonly redirectUrls: OAuthAppFieldsFragment["redirectUrls"];
   public readonly updatedAt: OAuthAppFieldsFragment["updatedAt"];
+  public readonly usesPkce: OAuthAppFieldsFragment["usesPkce"];
   public readonly createdBy: MachineUserActorModel | SystemActorModel | UserActorModel;
   public readonly updatedBy: MachineUserActorModel | SystemActorModel | UserActorModel;
 
   constructor(client: PlainGraphQLClient, data: OAuthAppFieldsFragment) {
     this._client = client;
     this._data = data;
+    this.allowedOrigins = data.allowedOrigins;
     this.clientId = data.clientId;
     this.createdAt = data.createdAt;
     this.description = data.description;
@@ -7774,6 +7877,7 @@ export class OAuthAppModel {
     this.name = data.name;
     this.redirectUrls = data.redirectUrls;
     this.updatedAt = data.updatedAt;
+    this.usesPkce = data.usesPkce;
     this.createdBy = (() => {
     switch ((data.createdBy as any).__typename) {
       case "MachineUserActor": return new MachineUserActorModel(client, data.createdBy as any);
@@ -7992,6 +8096,7 @@ export class RoleModel {
   public readonly key: RoleFieldsFragment["key"];
   public readonly name: RoleFieldsFragment["name"];
   public readonly permissions: RoleFieldsFragment["permissions"];
+  public readonly priority: RoleFieldsFragment["priority"];
 
   constructor(client: PlainGraphQLClient, data: RoleFieldsFragment) {
     this._client = client;
@@ -8004,6 +8109,7 @@ export class RoleModel {
     this.key = data.key;
     this.name = data.name;
     this.permissions = data.permissions;
+    this.priority = data.priority;
   }
 
   public get customRole(): Promise<CustomRoleModel | undefined> {
@@ -9871,6 +9977,7 @@ export class ThreadDiscussionQuestionEntryPayloadModel {
   public readonly __typename = "ThreadDiscussionQuestionEntryPayload" as const;
 
   public readonly questionRequestId: ThreadDiscussionQuestionEntryPayloadFieldsFragment["questionRequestId"];
+  public readonly questions: ThreadDiscussionQuestionEntryPayloadFieldsFragment["questions"];
   public readonly resolvedAt: ThreadDiscussionQuestionEntryPayloadFieldsFragment["resolvedAt"];
   public readonly selections: ThreadDiscussionQuestionEntryPayloadFieldsFragment["selections"];
   public readonly status: ThreadDiscussionQuestionEntryPayloadFieldsFragment["status"];
@@ -9879,6 +9986,7 @@ export class ThreadDiscussionQuestionEntryPayloadModel {
     this._client = client;
     this._data = data;
     this.questionRequestId = data.questionRequestId;
+    this.questions = data.questions;
     this.resolvedAt = data.resolvedAt;
     this.selections = data.selections;
     this.status = data.status;
@@ -10386,11 +10494,13 @@ export class ThreadSingleValueMetricModel {
   public readonly __typename = "ThreadSingleValueMetric" as const;
 
   public readonly threadIds: ThreadSingleValueMetricFieldsFragment["threadIds"];
+  public readonly values: ThreadSingleValueMetricFieldsFragment["values"];
 
   constructor(client: PlainGraphQLClient, data: ThreadSingleValueMetricFieldsFragment) {
     this._client = client;
     this._data = data;
     this.threadIds = data.threadIds;
+    this.values = data.values;
   }
 }
 
@@ -10613,12 +10723,14 @@ export class ThreadTimeSeriesMetricModel {
   protected _data: ThreadTimeSeriesMetricFieldsFragment;
   public readonly __typename = "ThreadTimeSeriesMetric" as const;
 
+  public readonly series: ThreadTimeSeriesMetricFieldsFragment["series"];
   public readonly threadIds: ThreadTimeSeriesMetricFieldsFragment["threadIds"];
   public readonly timestamps: ThreadTimeSeriesMetricFieldsFragment["timestamps"];
 
   constructor(client: PlainGraphQLClient, data: ThreadTimeSeriesMetricFieldsFragment) {
     this._client = client;
     this._data = data;
+    this.series = data.series;
     this.threadIds = data.threadIds;
     this.timestamps = data.timestamps;
   }
@@ -10809,11 +10921,13 @@ export class TimeSeriesMetricModel {
   protected _data: TimeSeriesMetricFieldsFragment;
   public readonly __typename = "TimeSeriesMetric" as const;
 
+  public readonly series: TimeSeriesMetricFieldsFragment["series"];
   public readonly timestamps: TimeSeriesMetricFieldsFragment["timestamps"];
 
   constructor(client: PlainGraphQLClient, data: TimeSeriesMetricFieldsFragment) {
     this._client = client;
     this._data = data;
+    this.series = data.series;
     this.timestamps = data.timestamps;
   }
 }
@@ -11519,6 +11633,7 @@ export class WorkflowExecutionModel {
   public readonly executionStatus: WorkflowExecutionFieldsFragment["executionStatus"];
   public readonly id: WorkflowExecutionFieldsFragment["id"];
   public readonly startedAt: WorkflowExecutionFieldsFragment["startedAt"];
+  public readonly stepExecutions: WorkflowExecutionFieldsFragment["stepExecutions"];
   public readonly triggeredBy: WorkflowExecutionFieldsFragment["triggeredBy"];
   public readonly workflowId: WorkflowExecutionFieldsFragment["workflowId"];
   public readonly manuallyTriggeredBy: (MachineUserActorModel | SystemActorModel | UserActorModel) | null;
@@ -11535,6 +11650,7 @@ export class WorkflowExecutionModel {
     this.executionStatus = data.executionStatus;
     this.id = data.id;
     this.startedAt = data.startedAt;
+    this.stepExecutions = data.stepExecutions;
     this.triggeredBy = data.triggeredBy;
     this.workflowId = data.workflowId;
     this.manuallyTriggeredBy = data.manuallyTriggeredBy ? (() => {
@@ -11684,6 +11800,7 @@ export class WorkflowTemplateModel {
   public readonly isFeatured: WorkflowTemplateFieldsFragment["isFeatured"];
   public readonly tags: WorkflowTemplateFieldsFragment["tags"];
   public readonly title: WorkflowTemplateFieldsFragment["title"];
+  public readonly workflows: WorkflowTemplateFieldsFragment["workflows"];
 
   constructor(client: PlainGraphQLClient, data: WorkflowTemplateFieldsFragment) {
     this._client = client;
@@ -11696,6 +11813,7 @@ export class WorkflowTemplateModel {
     this.isFeatured = data.isFeatured;
     this.tags = data.tags;
     this.title = data.title;
+    this.workflows = data.workflows;
   }
 }
 
@@ -12389,6 +12507,7 @@ export interface PlainSdkQueries {
   escalationPath(variables: EscalationPathQueryVariables): Promise<EscalationPathModel>;
   escalationPaths(variables: EscalationPathsQueryVariables): Promise<PlainConnection<EscalationPathModel>>;
   generatedReplies(variables: GeneratedRepliesQueryVariables): Promise<GeneratedReplyModel[]>;
+  generatedReplyState(variables: GeneratedReplyStateQueryVariables): Promise<NonNullable<GeneratedReplyStateQuery["generatedReplyState"]>>;
   getMSTeamsMembersForChannel(variables: GetMsTeamsMembersForChannelQueryVariables): Promise<MSTeamsChannelMembersModel>;
   githubUserAuthIntegration(): Promise<GithubUserAuthIntegrationModel>;
   /** @deprecated Use `threadHeatmapMetric` instead — it supports filtering and group-by. */
@@ -12421,7 +12540,6 @@ export interface PlainSdkQueries {
   linearAppIntegration(): Promise<WorkspaceLinearIntegrationModel>;
   machineUser(variables: MachineUserQueryVariables): Promise<MachineUserModel>;
   machineUsers(variables: MachineUsersQueryVariables): Promise<PlainConnection<MachineUserModel>>;
-  memberSeatCapCheck(variables: MemberSeatCapCheckQueryVariables): Promise<MemberSeatCapCheckQuery["memberSeatCapCheck"]>;
   myBillingRota(): Promise<NonNullable<MyBillingRotaQuery["myBillingRota"]>>;
   myBillingSubscription(): Promise<BillingSubscriptionModel>;
   myEmailSignature(): Promise<EmailSignatureModel>;
@@ -12504,6 +12622,7 @@ export interface PlainSdkQueries {
   testThreads(): Promise<ThreadModel[]>;
   thread(variables: ThreadQueryVariables): Promise<ThreadModel>;
   threadByExternalId(variables: ThreadByExternalIdQueryVariables): Promise<ThreadModel>;
+  threadByMSTeamsMessage(variables: ThreadByMsTeamsMessageQueryVariables): Promise<ThreadModel>;
   threadByRef(variables: ThreadByRefQueryVariables): Promise<ThreadModel>;
   threadBySlackMessage(variables: ThreadBySlackMessageQueryVariables): Promise<ThreadModel>;
   threadBySlackPermalink(variables: ThreadBySlackPermalinkQueryVariables): Promise<ThreadModel>;
@@ -12543,6 +12662,7 @@ export interface PlainSdkQueries {
   webhookVersions(variables: WebhookVersionsQueryVariables): Promise<WebhookVersionsQuery["webhookVersions"]>;
   workOSConfiguration(): Promise<NonNullable<WorkOsConfigurationQuery["workOSConfiguration"]>>;
   workflow(variables: WorkflowQueryVariables): Promise<WorkflowModel>;
+  workflowBuilderGuide(): Promise<WorkflowBuilderGuideQuery["workflowBuilderGuide"]>;
   workflowCapabilities(variables: WorkflowCapabilitiesQueryVariables): Promise<WorkflowCapabilitiesQuery["workflowCapabilities"]>;
   workflowExecution(variables: WorkflowExecutionQueryVariables): Promise<WorkflowExecutionModel>;
   workflowExecutions(variables: WorkflowExecutionsQueryVariables): Promise<PlainConnection<WorkflowExecutionModel>>;
@@ -12650,6 +12770,7 @@ export interface PlainSdkMutations {
   createLabelType(variables: CreateLabelTypeMutationVariables): Promise<CreateLabelTypeMutation["createLabelType"]>;
   createLinearAppIntegration(variables: CreateLinearAppIntegrationMutationVariables): Promise<CreateLinearAppIntegrationMutation["createLinearAppIntegration"]>;
   createMachineUser(variables: CreateMachineUserMutationVariables): Promise<CreateMachineUserMutation["createMachineUser"]>;
+  createMcpFeedback(variables: CreateMcpFeedbackMutationVariables): Promise<CreateMcpFeedbackMutation["createMcpFeedback"]>;
   createMyFavoritePage(variables: CreateMyFavoritePageMutationVariables): Promise<CreateMyFavoritePageMutation["createMyFavoritePage"]>;
   createMyLinearIntegration(variables: CreateMyLinearIntegrationMutationVariables): Promise<CreateMyLinearIntegrationMutation["createMyLinearIntegration"]>;
   createMyMSTeamsIntegration(variables: CreateMyMsTeamsIntegrationMutationVariables): Promise<CreateMyMsTeamsIntegrationMutation["createMyMSTeamsIntegration"]>;
@@ -12671,6 +12792,7 @@ export interface PlainSdkMutations {
   createThreadDiscussion(variables: CreateThreadDiscussionMutationVariables): Promise<CreateThreadDiscussionMutation["createThreadDiscussion"]>;
   createThreadEvent(variables: CreateThreadEventMutationVariables): Promise<CreateThreadEventMutation["createThreadEvent"]>;
   createThreadFieldSchema(variables: CreateThreadFieldSchemaMutationVariables): Promise<CreateThreadFieldSchemaMutation["createThreadFieldSchema"]>;
+  createThreadFromMSTeamsMessage(variables: CreateThreadFromMsTeamsMessageMutationVariables): Promise<CreateThreadFromMsTeamsMessageMutation["createThreadFromMSTeamsMessage"]>;
   createThreadFromSlackMessage(variables: CreateThreadFromSlackMessageMutationVariables): Promise<CreateThreadFromSlackMessageMutation["createThreadFromSlackMessage"]>;
   createThreadLink(variables: CreateThreadLinkMutationVariables): Promise<CreateThreadLinkMutation["createThreadLink"]>;
   createTier(variables: CreateTierMutationVariables): Promise<CreateTierMutation["createTier"]>;
@@ -12836,7 +12958,9 @@ export interface PlainSdkMutations {
   reorderThreadFieldSchemas(variables: ReorderThreadFieldSchemasMutationVariables): Promise<ReorderThreadFieldSchemasMutation["reorderThreadFieldSchemas"]>;
   replyToEmail(variables: ReplyToEmailMutationVariables): Promise<ReplyToEmailMutation["replyToEmail"]>;
   replyToThread(variables: ReplyToThreadMutationVariables): Promise<ReplyToThreadMutation["replyToThread"]>;
+  requestDiscussionQuestion(variables: RequestDiscussionQuestionMutationVariables): Promise<RequestDiscussionQuestionMutation["requestDiscussionQuestion"]>;
   requestDiscussionToolCallApproval(variables: RequestDiscussionToolCallApprovalMutationVariables): Promise<RequestDiscussionToolCallApprovalMutation["requestDiscussionToolCallApproval"]>;
+  requestGeneratedReply(variables: RequestGeneratedReplyMutationVariables): Promise<RequestGeneratedReplyMutation["requestGeneratedReply"]>;
   resolveAgentApproval(variables: ResolveAgentApprovalMutationVariables): Promise<ResolveAgentApprovalMutation["resolveAgentApproval"]>;
   resolveCustomerForMSTeamsChannel(variables: ResolveCustomerForMsTeamsChannelMutationVariables): Promise<ResolveCustomerForMsTeamsChannelMutation["resolveCustomerForMSTeamsChannel"]>;
   resolveCustomerForSlackChannel(variables: ResolveCustomerForSlackChannelMutationVariables): Promise<ResolveCustomerForSlackChannelMutation["resolveCustomerForSlackChannel"]>;
@@ -12912,6 +13036,7 @@ export interface PlainSdkMutations {
   updateMyUser(variables: UpdateMyUserMutationVariables): Promise<UpdateMyUserMutation["updateMyUser"]>;
   updateNote(variables: UpdateNoteMutationVariables): Promise<UpdateNoteMutation["updateNote"]>;
   updateOAuthApp(variables: UpdateOAuthAppMutationVariables): Promise<UpdateOAuthAppMutation["updateOAuthApp"]>;
+  updateRolePriorityOrder(variables: UpdateRolePriorityOrderMutationVariables): Promise<UpdateRolePriorityOrderMutation["updateRolePriorityOrder"]>;
   updateSavedThreadsView(variables: UpdateSavedThreadsViewMutationVariables): Promise<UpdateSavedThreadsViewMutation["updateSavedThreadsView"]>;
   updateServiceLevelAgreement(variables: UpdateServiceLevelAgreementMutationVariables): Promise<UpdateServiceLevelAgreementMutation["updateServiceLevelAgreement"]>;
   updateServiceLevelAgreementPolicy(variables: UpdateServiceLevelAgreementPolicyMutationVariables): Promise<UpdateServiceLevelAgreementPolicyMutation["updateServiceLevelAgreementPolicy"]>;
@@ -13547,6 +13672,16 @@ export class PlainSdk {
       return (response.generatedReplies ?? []).map(d => new GeneratedReplyModel(_client, d));
     },
 
+    async generatedReplyState(variables: GeneratedReplyStateQueryVariables): Promise<NonNullable<GeneratedReplyStateQuery["generatedReplyState"]>> {
+      const response = await _client.request<GeneratedReplyStateQuery, GeneratedReplyStateQueryVariables>(
+        GeneratedReplyStateDocument, variables
+      );
+      if (!response.generatedReplyState) {
+        throw new Error("generatedReplyState not found");
+      }
+      return response.generatedReplyState;
+    },
+
     async getMSTeamsMembersForChannel(variables: GetMsTeamsMembersForChannelQueryVariables): Promise<MSTeamsChannelMembersModel> {
       const response = await _client.request<GetMsTeamsMembersForChannelQuery, GetMsTeamsMembersForChannelQueryVariables>(
         GetMsTeamsMembersForChannelDocument, variables
@@ -13841,13 +13976,6 @@ export class PlainSdk {
         pageInfo: conn.pageInfo,
         fetch: (cursor) => query.machineUsers({ ...variables, ...cursor } as MachineUsersQueryVariables),
       });
-    },
-
-    async memberSeatCapCheck(variables: MemberSeatCapCheckQueryVariables): Promise<MemberSeatCapCheckQuery["memberSeatCapCheck"]> {
-      const response = await _client.request<MemberSeatCapCheckQuery, MemberSeatCapCheckQueryVariables>(
-        MemberSeatCapCheckDocument, variables
-      );
-      return response.memberSeatCapCheck;
     },
 
     async myBillingRota(): Promise<NonNullable<MyBillingRotaQuery["myBillingRota"]>> {
@@ -14580,6 +14708,16 @@ export class PlainSdk {
       return new ThreadModel(_client, response.threadByExternalId);
     },
 
+    async threadByMSTeamsMessage(variables: ThreadByMsTeamsMessageQueryVariables): Promise<ThreadModel> {
+      const response = await _client.request<ThreadByMsTeamsMessageQuery, ThreadByMsTeamsMessageQueryVariables>(
+        ThreadByMsTeamsMessageDocument, variables
+      );
+      if (!response.threadByMSTeamsMessage) {
+        throw new Error("threadByMSTeamsMessage not found");
+      }
+      return new ThreadModel(_client, response.threadByMSTeamsMessage);
+    },
+
     async threadByRef(variables: ThreadByRefQueryVariables): Promise<ThreadModel> {
       const response = await _client.request<ThreadByRefQuery, ThreadByRefQueryVariables>(
         ThreadByRefDocument, variables
@@ -14958,6 +15096,13 @@ export class PlainSdk {
         throw new Error("workflow not found");
       }
       return new WorkflowModel(_client, response.workflow);
+    },
+
+    async workflowBuilderGuide(): Promise<WorkflowBuilderGuideQuery["workflowBuilderGuide"]> {
+      const response = await _client.request<WorkflowBuilderGuideQuery, Record<string, never>>(
+        WorkflowBuilderGuideDocument
+      );
+      return response.workflowBuilderGuide;
     },
 
     async workflowCapabilities(variables: WorkflowCapabilitiesQueryVariables): Promise<WorkflowCapabilitiesQuery["workflowCapabilities"]> {
@@ -15768,6 +15913,13 @@ export class PlainSdk {
       return response.createMachineUser;
     },
 
+    async createMcpFeedback(variables: CreateMcpFeedbackMutationVariables): Promise<CreateMcpFeedbackMutation["createMcpFeedback"]> {
+      const response = await _client.request<CreateMcpFeedbackMutation, CreateMcpFeedbackMutationVariables>(
+        CreateMcpFeedbackDocument, variables
+      );
+      return response.createMcpFeedback;
+    },
+
     async createMyFavoritePage(variables: CreateMyFavoritePageMutationVariables): Promise<CreateMyFavoritePageMutation["createMyFavoritePage"]> {
       const response = await _client.request<CreateMyFavoritePageMutation, CreateMyFavoritePageMutationVariables>(
         CreateMyFavoritePageDocument, variables
@@ -15907,6 +16059,13 @@ export class PlainSdk {
         CreateThreadFieldSchemaDocument, variables
       );
       return response.createThreadFieldSchema;
+    },
+
+    async createThreadFromMSTeamsMessage(variables: CreateThreadFromMsTeamsMessageMutationVariables): Promise<CreateThreadFromMsTeamsMessageMutation["createThreadFromMSTeamsMessage"]> {
+      const response = await _client.request<CreateThreadFromMsTeamsMessageMutation, CreateThreadFromMsTeamsMessageMutationVariables>(
+        CreateThreadFromMsTeamsMessageDocument, variables
+      );
+      return response.createThreadFromMSTeamsMessage;
     },
 
     async createThreadFromSlackMessage(variables: CreateThreadFromSlackMessageMutationVariables): Promise<CreateThreadFromSlackMessageMutation["createThreadFromSlackMessage"]> {
@@ -17004,11 +17163,25 @@ export class PlainSdk {
       return response.replyToThread;
     },
 
+    async requestDiscussionQuestion(variables: RequestDiscussionQuestionMutationVariables): Promise<RequestDiscussionQuestionMutation["requestDiscussionQuestion"]> {
+      const response = await _client.request<RequestDiscussionQuestionMutation, RequestDiscussionQuestionMutationVariables>(
+        RequestDiscussionQuestionDocument, variables
+      );
+      return response.requestDiscussionQuestion;
+    },
+
     async requestDiscussionToolCallApproval(variables: RequestDiscussionToolCallApprovalMutationVariables): Promise<RequestDiscussionToolCallApprovalMutation["requestDiscussionToolCallApproval"]> {
       const response = await _client.request<RequestDiscussionToolCallApprovalMutation, RequestDiscussionToolCallApprovalMutationVariables>(
         RequestDiscussionToolCallApprovalDocument, variables
       );
       return response.requestDiscussionToolCallApproval;
+    },
+
+    async requestGeneratedReply(variables: RequestGeneratedReplyMutationVariables): Promise<RequestGeneratedReplyMutation["requestGeneratedReply"]> {
+      const response = await _client.request<RequestGeneratedReplyMutation, RequestGeneratedReplyMutationVariables>(
+        RequestGeneratedReplyDocument, variables
+      );
+      return response.requestGeneratedReply;
     },
 
     async resolveAgentApproval(variables: ResolveAgentApprovalMutationVariables): Promise<ResolveAgentApprovalMutation["resolveAgentApproval"]> {
@@ -17504,6 +17677,13 @@ export class PlainSdk {
         UpdateOAuthAppDocument, variables
       );
       return response.updateOAuthApp;
+    },
+
+    async updateRolePriorityOrder(variables: UpdateRolePriorityOrderMutationVariables): Promise<UpdateRolePriorityOrderMutation["updateRolePriorityOrder"]> {
+      const response = await _client.request<UpdateRolePriorityOrderMutation, UpdateRolePriorityOrderMutationVariables>(
+        UpdateRolePriorityOrderDocument, variables
+      );
+      return response.updateRolePriorityOrder;
     },
 
     async updateSavedThreadsView(variables: UpdateSavedThreadsViewMutationVariables): Promise<UpdateSavedThreadsViewMutation["updateSavedThreadsView"]> {
