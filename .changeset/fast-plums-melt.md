@@ -2,4 +2,4 @@
 "@team-plain/graphql": patch
 ---
 
-Fix connection pagination when changing direction. Both root queries and model connection methods now replace the previous cursor and move the requested page size between `first` and `last`, preserving filters and sort order.
+Fix `fetchNext()` and `fetchPrevious()` when switching pagination direction. Calling `fetchPrevious()` after a forward page, or `fetchNext()` after a backward page, sent mixed `first`/`before` or `last`/`after` variables, which the Plain API rejects with a validation error. The SDK now sends only the new direction's cursor and carries the page size over, keeping filters and sort order.
