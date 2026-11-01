@@ -12,7 +12,6 @@ describe("connection pagination", () => {
     vi.restoreAllMocks();
   });
 
-  // Helper functions
   function makeCustomersResponse(
     customers: Array<{ id: string; fullName: string; shortName: string }>,
     pageInfo: {
@@ -64,7 +63,6 @@ describe("connection pagination", () => {
       },
     };
   }
-  // End helper functions
 
   it.each([
     { initial: { first: 2, after: "old_after" }, direction: "previous" },

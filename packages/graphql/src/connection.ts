@@ -70,4 +70,3 @@ export function paginationVariables<T extends PaginationVariables>(
     last: cursor.before !== undefined ? (variables?.last ?? variables?.first) : undefined,
   };
 }
-// End helper functions
