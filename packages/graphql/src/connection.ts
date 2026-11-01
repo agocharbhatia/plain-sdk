@@ -50,7 +50,6 @@ export class PlainConnection<N> {
   }
 }
 
-// Helper functions
 interface PaginationVariables {
   first?: number | null;
   last?: number | null;

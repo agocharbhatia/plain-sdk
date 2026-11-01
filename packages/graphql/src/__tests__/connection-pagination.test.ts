@@ -194,7 +194,7 @@ describe("connection pagination", () => {
     });
     fetchMock.mockImplementation(async () => graphqlResponse(response));
     const client = new PlainClient({ apiKey: "test-key" });
-    const page = await client.query.customers(variables);
+    const page = await client.query.customers(variables as CustomersQueryVariables);
     const previous = await page.fetchPrevious();
     expect(getRequestBody(fetchMock, 1).variables).toEqual({
       before: "cursor_start",
