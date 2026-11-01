@@ -13567,7 +13567,7 @@ export class PlainSdk {
       return new PlainConnection<BusinessHoursOverrideModel>({
         nodes: conn.edges.map(e => new BusinessHoursOverrideModel(_client, e.node)),
         pageInfo: conn.pageInfo,
-        fetch: (cursor) => query.businessHoursOverrides({ ...variables, ...cursor } as BusinessHoursOverridesQueryVariables),
+        fetch: (cursor) => query.businessHoursOverrides(paginationVariables(variables, cursor) as BusinessHoursOverridesQueryVariables),
       });
     },
 
